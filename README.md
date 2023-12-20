@@ -3,6 +3,7 @@
 under: # WRITE-AHEAD LOG
 
 wal_level = logical
+
 3) then restart postgres docker instance
 4) create table customer (id int primary key, first_name varchar(256), last_name varchar(256), email varchar(256) )
 5) hazelcast installation as in https://docs.hazelcast.com/hazelcast/5.3/getting-started/get-started-docker
