@@ -1,8 +1,12 @@
 package com.vk.postgres.hazelcast.debenzium.logicalreplication.config;
 
 import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.instance.impl.BootstrappedInstanceProxy;
+import com.hazelcast.instance.impl.BootstrappedInstanceProxyFactory;
 import com.hazelcast.jet.cdc.CdcSinks;
 import com.hazelcast.jet.cdc.ChangeRecord;
 import com.hazelcast.jet.cdc.postgres.PostgresCdcSources;
@@ -21,7 +25,7 @@ public class Table1DebeziumListener {
     @PostConstruct
     public void postConstruct(){
         StreamSource<ChangeRecord> source = PostgresCdcSources.postgres("source")
-                .setDatabaseAddress("127.0.0.1")
+                .setDatabaseAddress("172.18.0.2")
                 .setDatabasePort(5432)
                 .setDatabaseUser("vkoppara")
                 .setDatabasePassword("password")
@@ -39,7 +43,16 @@ public class Table1DebeziumListener {
                         r -> r.value().toObject(Customer.class).toString()));
 
         JobConfig cfg = new JobConfig().setName("postgres-monitor");
-        HazelcastInstance hz = Hazelcast.bootstrappedInstance();
+        Config config = new Config();
+        NetworkConfig networkConfig = config.getNetworkConfig();
+        config.getJetConfig().setEnabled(true);
+        /*networkConfig.getJoin()
+                .getMulticastConfig()
+                .setEnabled(true);*/
+        /*networkConfig.getJoin()
+                .getTcpIpConfig()
+                .setEnabled(true);*/
+        HazelcastInstance hz = BootstrappedInstanceProxyFactory.createWithCLIJetProxy(Hazelcast.newHazelcastInstance(config));
         hz.getJet().newJob(pipeline, cfg);
     }
 

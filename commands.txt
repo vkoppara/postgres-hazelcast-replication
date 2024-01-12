@@ -1,0 +1,17 @@
+docker build --build-arg JAR_FILE=target/*.jar -t logical-replication:1.0 .
+docker network create hazelcast-network
+docker run --name first-member --network hazelcast-network -e HZ_NETWORK_PUBLICADDRESS=127.0.0.1:5701 -e HZ_CLUSTERNAME=logical-replication-cluster -p 5701:5701 -p 8080:8080 logical-replication:1.0
+docker run --name second-member --network hazelcast-network -e HZ_NETWORK_PUBLICADDRESS=127.0.0.1:5702 -e HZ_CLUSTERNAME=logical-replication-cluster -p 5702:5701 logical-replication:1.0
+## to install postgres
+docker run --name postgresql --network hazelcast-network  -e POSTGRES_USER=vkoppara -e POSTGRES_PASSWORD=password -p 5432:5432 -v /home/vkoppara/Downloads/postgres/data:/var/lib/postgresql/data -d postgres
+## in dbeaver.
+create table customer (id int primary key,first_name varchar(256), last_name varchar(256),email varchar(256))
+create publication my_publication for all tables
+ALTER SYSTEM SET wal_level = logical;
+restart postgres container
+#download the jar and create an image for this.
+docker run --network hazelcast-network -p 8080:8080 hazelcast/management-center:latest-snapshot
+
+
+
+
