@@ -14,5 +14,8 @@ restart postgres container
 docker run --network hazelcast-network -p 8080:8080 hazelcast/management-center:latest-snapshot
 
 
+https://jet-start.sh/docs/get-started/intro
+
+
 
 
