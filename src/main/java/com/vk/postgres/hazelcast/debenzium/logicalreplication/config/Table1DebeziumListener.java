@@ -5,6 +5,7 @@ import com.hazelcast.config.Config;
 import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.cp.lock.FencedLock;
 import com.hazelcast.instance.impl.BootstrappedInstanceProxy;
 import com.hazelcast.instance.impl.BootstrappedInstanceProxyFactory;
 import com.hazelcast.jet.cdc.CdcSinks;
@@ -53,7 +54,12 @@ public class Table1DebeziumListener {
                 .getTcpIpConfig()
                 .setEnabled(true);*/
         HazelcastInstance hz = BootstrappedInstanceProxyFactory.createWithCLIJetProxy(Hazelcast.newHazelcastInstance(config));
-        hz.getJet().newJob(pipeline, cfg);
+        FencedLock fencedLock = hz.getCPSubsystem().getLock("locked");
+        System.out.println("isLocked"+fencedLock.isLocked());
+        if(!fencedLock.isLocked()) {
+            fencedLock.lock();
+            hz.getJet().newJob(pipeline, cfg);
+        }
     }
 
     @Bean
