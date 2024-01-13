@@ -2,9 +2,11 @@ package com.vk.postgres.hazelcast.debenzium.logicalreplication.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.r2dbc.postgresql.codec.Json;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -25,5 +27,10 @@ public class Customer implements Serializable {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("test_json")
+    private Json testJson;
+
+    @JsonProperty("created_date")
+    private Long createdDate;
 
 }
