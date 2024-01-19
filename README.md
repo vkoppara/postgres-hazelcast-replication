@@ -15,4 +15,5 @@ insert into customer values(3, 'firstname-1', 'lastname','email@gmail.com')
 
 10) https://container-registry.oracle.com/ords/f?p=113:4:11396812861959:::4:P4_REPOSITORY,AI_REPOSITORY,AI_REPOSITORY_NAME,P4_REPOSITORY_NAME,P4_EULA_ID,P4_BUSINESS_AREA_ID:1863,1863,Oracle%20Database%20Free,Oracle%20Database%20Free,1,0&cs=3jg6F0E_t5j5JXr35PRA9pqMntfg1gCmVjus-2vZYubKS8-XGM4YyUmGj8b1HLVr-BTlHg9cgw-TPUsFEoFcs_Q
 11) https://debezium.io/documentation/reference/2.5/connectors/oracle.html#setting-up-oracle
+12) docker run --name oraclefree -e ORACLE_PWD=password123 -p 1521:1521 -v /home/vkoppara/Downloads/oracle:/opt/oracle/oradata container-registry.oracle.com/database/free:latest
    
